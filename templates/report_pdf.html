@@ -28,13 +28,13 @@
         }
 
         .report-page {
-            max-width: 720px;
+            max-width: 660px;
             box-sizing: border-box;
             margin: 0 auto;
             background: #ffffff;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             border-radius: 8px;
-            padding: 30px 24px;
+            padding: 24px 20px;
         }
 
         .report-header {
@@ -307,15 +307,13 @@
 
             const element = document.getElementById('reportContent');
             const opt = {
-                margin:       [10, 10, 10, 10],
+                margin:       10,
                 filename:     'PhishingGuard_Security_Audit_Report.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { 
                     scale: 2, 
                     useCORS: true, 
                     logging: false,
-                    width: 720,
-                    windowWidth: 720,
                     scrollX: 0,
                     scrollY: 0
                 },
