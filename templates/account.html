@@ -389,79 +389,20 @@
         });
     }
 
-    // 2. Direct PDF Document Generation via html2pdf
+    // 2. Certified PDF Audit Report Generation
     function generateAccountPDF() {
         const btn = document.getElementById('generatePdfBtn');
         const originalText = btn.innerHTML;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Generating PDF...';
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Preparing PDF...';
         btn.disabled = true;
 
-        // Sync active user details and live date into hidden template before generating
-        const currentName = document.getElementById('accountName') ? document.getElementById('accountName').value : 'Karthick';
-        const currentEmail = document.getElementById('accountEmail') ? document.getElementById('accountEmail').value : 'karthick@phishingguard.ai';
-        const currentRole = document.getElementById('accountRole') ? document.getElementById('accountRole').value : 'Security Analyst';
-        
-        const pdfUserDisplay = document.getElementById('pdfUserDisplay');
-        if (pdfUserDisplay) {
-            pdfUserDisplay.textContent = currentName + ' (' + currentEmail + ')';
-        }
-        const pdfUserRoleOrg = document.getElementById('pdfUserRoleOrg');
-        if (pdfUserRoleOrg) {
-            pdfUserRoleOrg.textContent = currentRole + ' \u2022 PhishingGuard AI Lab';
-        }
-        const pdfDateDisplay = document.getElementById('pdfDateDisplay');
-        if (pdfDateDisplay) {
-            const now = new Date();
-            pdfDateDisplay.textContent = 'Report Date: ' + now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-        }
+        // Open the certified audit report page which automatically compiles and downloads the full 184KB PDF
+        window.open("{{ url_for('account_report_pdf') }}?download=1", "_blank");
 
-        const element = document.getElementById('hiddenPdfReportTemplate');
-        
-        // Clone element offscreen with exact pixel width matching A4 printable body
-        const clone = element.cloneNode(true);
-        clone.style.display = 'block';
-        clone.style.position = 'fixed';
-        clone.style.top = '0';
-        clone.style.left = '0';
-        clone.style.zIndex = '-99999';
-        clone.style.width = '660px';
-        clone.style.maxWidth = '660px';
-        clone.style.boxSizing = 'border-box';
-        document.body.appendChild(clone);
-
-        const opt = {
-            margin:       10,
-            filename:     'PhishingGuard_Security_Audit_Report.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { 
-                scale: 2, 
-                useCORS: true, 
-                logging: false,
-                scrollX: 0,
-                scrollY: 0
-            },
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        html2pdf().set(opt).from(clone).save().then(() => {
-            if (document.body.contains(clone)) {
-                document.body.removeChild(clone);
-            }
-            btn.innerHTML = '<i class="bi bi-check2 me-1"></i> Download Complete!';
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 3000);
-        }).catch(err => {
-            console.error("PDF generation error:", err);
-            if (document.body.contains(clone)) {
-                document.body.removeChild(clone);
-            }
+        setTimeout(() => {
             btn.innerHTML = originalText;
             btn.disabled = false;
-            // Fallback: open print view
-            window.open("{{ url_for('account_report_pdf') }}", "_blank");
-        });
+        }, 1500);
     }
 </script>
 {% endblock %}
