@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}User Account & Reports — PhishingGuard AI{% endblock %}
+{% block page_title %}User Account &amp; Reports{% endblock %}
+
+{% block content %}
+<div class="row g-4 justify-content-center">
+    <!-- Left Column: User Account / Sign In Matching Screen 8 -->
+    <div class="col-lg-6 col-md-7">
+        <div class="pg-card h-100">
+            <h2 class="h5 fw-bold text-dark mb-1">User Account</h2>
+            <p class="text-muted small mb-4">Manage your credentials, security preferences, and reports.</p>
+
+            <div class="p-3 bg-light rounded-3 border border-light mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="topbar-user-avatar" style="width: 48px; height: 48px; font-size: 1.25rem;">
+                        K
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark">Karthick</div>
+                        <div class="text-muted small">karthick@phishingguard.ai &bull; <span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size: 0.72rem;">Security Analyst</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sign In / Update Form Matching Screen 8 -->
+            <form onsubmit="event.preventDefault(); alert('Account preferences updated successfully!');">
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted" for="accountEmail">Email address</label>
+                    <input type="email" class="form-control" id="accountEmail" value="karthick@phishingguard.ai">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted" for="accountPassword">Password</label>
+                    <input type="password" class="form-control" id="accountPassword" value="••••••••••••">
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="rememberMe" checked>
+                        <label class="form-check-label small text-muted" for="rememberMe">Remember me</label>
+                    </div>
+                    <a href="javascript:void(0)" class="small text-primary fw-semibold" onclick="alert('Password reset link sent to registered email.');">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <button type="submit" class="btn btn-pg-primary w-100 py-2">
+                    Save Account Settings
+                </button>
+            </form>
+
+            <div class="text-center mt-4 pt-3 border-top border-light text-muted small">
+                Don't have an enterprise account? <a href="javascript:void(0)" class="text-primary fw-semibold" onclick="alert('Registration open for academic domains.');">Register here</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column: "Your Benefits" Matching Screen 8 -->
+    <div class="col-lg-5 col-md-5">
+        <div class="pg-card h-100 d-flex flex-column justify-content-between">
+            <div>
+                <h3 class="h6 fw-bold text-dark mb-3">Your Benefits</h3>
+
+                <ul class="list-unstyled mb-4">
+                    <li class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-check-circle-fill text-primary"></i>
+                        <span class="text-dark small fw-semibold">Save and track your scan history</span>
+                    </li>
+                    <li class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-check-circle-fill text-primary"></i>
+                        <span class="text-dark small fw-semibold">Generate certified PDF analysis reports</span>
+                    </li>
+                    <li class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-check-circle-fill text-primary"></i>
+                        <span class="text-dark small fw-semibold">View personalized threat analytics</span>
+                    </li>
+                    <li class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-check-circle-fill text-primary"></i>
+                        <span class="text-dark small fw-semibold">Manage your organization API keys</span>
+                    </li>
+                </ul>
+
+                <!-- Export PDF Report Button -->
+                <div class="p-3 bg-light rounded-3 border border-light text-center mb-3">
+                    <i class="bi bi-file-earmark-pdf fs-2 text-danger d-block mb-1"></i>
+                    <div class="fw-bold text-dark small mb-1">Analysis PDF Export</div>
+                    <p class="text-muted" style="font-size: 0.78rem;">Download a formal executive PDF report of all system scans.</p>
+                    <button class="btn btn-sm btn-outline-danger py-2 px-3 fw-bold" onclick="window.print()">
+                        <i class="bi bi-download"></i> Generate &amp; Print PDF Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- Security Assurance Note Matching Screen 8 -->
+            <div class="p-3 rounded-3" style="background-color: #eff6ff; border: 1px solid #bfdbfe;">
+                <div class="d-flex align-items-start gap-2">
+                    <i class="bi bi-shield-lock-fill text-primary fs-5"></i>
+                    <div>
+                        <div class="fw-bold text-primary small">Your data is secure</div>
+                        <p class="text-muted mb-0" style="font-size: 0.78rem;">
+                            We use industry standard security practices and TLS encryption to protect your scan telemetry.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

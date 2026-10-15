@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="28" height="28" fill="none">
+  <!-- Minimalist modern shield icon matching shieldi aesthetic -->
+  <path d="M16 3L5 7.5V15C5 22.2 9.7 28.8 16 30.5C22.3 28.8 27 22.2 27 15V7.5L16 3Z" fill="#0f172a"/>
+  <path d="M16 7L8 10.3V15.5C8 20.8 11.4 25.7 16 27.2C20.6 25.7 24 20.8 24 15.5V10.3L16 7Z" fill="#ffffff" fill-opacity="0.15"/>
+  <path d="M16 11V23" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <path d="M12 15L16 19L21 13" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,20 @@
+[
+  "url_length",
+  "hostname_length",
+  "path_length",
+  "query_length",
+  "dot_count",
+  "subdomain_count",
+  "hyphen_count",
+  "at_symbol_count",
+  "digit_count_hostname",
+  "digit_ratio_url",
+  "is_ip_address",
+  "is_https",
+  "has_suspicious_keyword",
+  "suspicious_keyword_count",
+  "has_suspicious_tld",
+  "has_non_standard_port",
+  "has_punycode",
+  "special_char_count"
+]

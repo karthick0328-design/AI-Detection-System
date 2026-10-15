@@ -1,0 +1,43 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environment
+venv/
+env/
+ENV/
+.venv/
+
+# Environment variables & secrets
+.env
+instance/
+
+# SQLite Database
+*.db
+*.sqlite3
+
+# Kaggle API tokens & deployment artifacts
+.kaggle/
+kaggle.json
+.vercel/
+
+# Model training cache & large datasets
+data/*.csv
+!data/test_fixture.csv
+!data/dataset.csv
+data/*.parquet
+data/*.zip
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Test & coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+scratch/

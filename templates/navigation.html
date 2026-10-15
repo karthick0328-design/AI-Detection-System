@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}System Navigation Overview — PhishingGuard AI{% endblock %}
+{% block page_title %}Site Navigation Overview{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Hero Banner Matching Screen 12 -->
+    <div class="col-12">
+        <div class="pg-card text-center p-4 p-md-5" style="background: radial-gradient(circle at 50% 30%, #eff6ff 0%, #ffffff 80%);">
+            <div class="mb-3">
+                <span class="brand-icon-box mx-auto" style="width: 56px; height: 56px; font-size: 1.75rem;">
+                    <i class="bi bi-shield-check"></i>
+                </span>
+            </div>
+            <h2 class="display-6 fw-bold text-dark mb-2">Your Online Safety Our Priority</h2>
+            <p class="text-primary fw-bold small text-uppercase tracking-wider mb-2">Advanced AI. Real Protection. A Safer Internet.</p>
+            <p class="text-muted small mx-auto" style="max-width: 600px;">
+                Explore all 12 modules of the PhishingGuard AI cybersecurity suite — from real-time lexical inference and explainable AI to email and QR phishing detection.
+            </p>
+        </div>
+    </div>
+
+    <!-- 12-Screen Navigation Grid Matching the User Design -->
+    <div class="col-12">
+        <h3 class="h6 fw-bold text-dark mb-3">All System Modules &amp; Interfaces</h3>
+        <div class="row g-3">
+            <!-- Screen 1: Home Page -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">1. Landing Page</span>
+                            <i class="bi bi-house-door text-primary fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">Home Page</h4>
+                        <p class="text-muted small mb-3">Public landing interface with URL search hero, 3D shield, and 4-step pipeline.</p>
+                    </div>
+                    <a href="{{ url_for('index') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Screen 2: URL Scanner -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">2. URL Scanner</span>
+                            <i class="bi bi-link-45deg text-primary fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">URL Scanner</h4>
+                        <p class="text-muted small mb-3">Dedicated link analyzer with sample pills, recent scan records, and risk badges.</p>
+                    </div>
+                    <a href="{{ url_for('scanner_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Screen 3: Scan Result -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle small fw-bold">3. Scan Result</span>
+                            <i class="bi bi-shield-exclamation text-danger fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">Scan Result Report</h4>
+                        <p class="text-muted small mb-3">Threat alert banner, circular risk score dial (87/100), key findings, and action buttons.</p>
+                    </div>
+                    <a href="{{ url_for('scanner_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Screen 4: Explainable AI -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">4. Explainable AI</span>
+                            <i class="bi bi-cpu text-primary fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">Explainable AI Page</h4>
+                        <p class="text-muted small mb-3">SHAP feature contributions chart, URL structure breakdown, and Why It Matters cards.</p>
+                    </div>
+                    <a href="{{ url_for('explain_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Screen 5: Bulk URL Scanner -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">5. Bulk Scanner</span>
+                            <i class="bi bi-file-earmark-spreadsheet text-primary fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">Bulk URL Scanner</h4>
+                        <p class="text-muted small mb-3">Drag-and-drop CSV batch upload, progress tracking, and batch audit records table.</p>
+                    </div>
+                    <a href="{{ url_for('bulk_scanner_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Screen 6: QR Code Scanner -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">6. QR Scanner</span>
+                            <i class="bi bi-qr-code text-primary fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">QR Code Scanner</h4>
+                        <p class="text-muted small mb-3">Upload and decode QR codes to analyze hidden or obfuscated phishing links.</p>
+                    </div>
+                    <a href="{{ url_for('qr_scanner_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Screen 7: Email Phishing Analyzer -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">7. Email Analyzer</span>
+                            <i class="bi bi-envelope-exclamation text-primary fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">Email Phishing Analyzer</h4>
+                        <p class="text-muted small mb-3">Message body and header inspector for social engineering, urgency, and SPF/DKIM spoofing.</p>
+                    </div>
+                    <a href="{{ url_for('email_analyzer_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Screen 8: User Accounts & Reports -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">8. User Account</span>
+                            <i class="bi bi-person-badge text-primary fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">User Account &amp; Reports</h4>
+                        <p class="text-muted small mb-3">Authentication profile management, security benefits, and certified PDF report generator.</p>
+                    </div>
+                    <a href="{{ url_for('account_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Screen 9: Security Education Centre -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">9. Education</span>
+                            <i class="bi bi-mortarboard text-primary fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">Security Education Centre</h4>
+                        <p class="text-muted small mb-3">Interactive quizzes, 3D education badge, and cybersecurity briefing articles.</p>
+                    </div>
+                    <a href="{{ url_for('education_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Screen 10: Threat Analytics -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">10. Analytics</span>
+                            <i class="bi bi-bar-chart text-primary fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">Threat Analytics Dashboard</h4>
+                        <p class="text-muted small mb-3">Real-time stat cards, prediction donut chart, 7-day timeline, and top warning signals.</p>
+                    </div>
+                    <a href="{{ url_for('analytics_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Screen 11: About & Methodology -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">11. Methodology</span>
+                            <i class="bi bi-info-circle text-primary fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">About &amp; Methodology</h4>
+                        <p class="text-muted small mb-3">Academic documentation, dataset hygiene, 4-step pipeline, and model comparison table.</p>
+                    </div>
+                    <a href="{{ url_for('about_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+
+            <!-- Screen 12: Scan History -->
+            <div class="col-md-4 col-sm-6">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle small fw-bold">12. History</span>
+                            <i class="bi bi-clock-history text-primary fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-1">Scan History &amp; Audit</h4>
+                        <p class="text-muted small mb-3">Searchable database audit trail with CSV export and individual record management.</p>
+                    </div>
+                    <a href="{{ url_for('history_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-3">Open Page &rarr;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

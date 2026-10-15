@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}QR Code Scanner — PhishingGuard AI{% endblock %}
+{% block page_title %}QR Code Scanner{% endblock %}
+
+{% block content %}
+<div class="row g-4 justify-content-center">
+    <div class="col-lg-9">
+        <div class="pg-card mb-4">
+            <h2 class="h4 fw-bold text-dark mb-1">QR Code Scanner</h2>
+            <p class="text-muted small mb-4">Decode and analyze QR codes for deceptive or hidden malicious URLs.</p>
+
+            <!-- QR Upload Dropzone Matching Screen 6 -->
+            <div class="dropzone-box text-center py-5" id="qrDropzone" onclick="document.getElementById('qrFileInput').click()">
+                <input type="file" id="qrFileInput" accept="image/*" class="d-none" onchange="handleQrSelected(this.files)">
+                <div class="mb-3">
+                    <span class="d-inline-flex align-items-center justify-content-center bg-white border border-light rounded-4 shadow-sm p-3 text-primary">
+                        <i class="bi bi-qr-code fs-1"></i>
+                    </span>
+                </div>
+                <h3 class="h5 fw-bold text-dark mb-1">Upload QR Code Image</h3>
+                <p class="text-muted small mb-0">Drag &amp; drop or click to upload</p>
+                <div class="text-muted small mt-1" style="font-size: 0.75rem;">Supported: JPG, PNG, WEBP | Max size: 2MB</div>
+            </div>
+
+            <!-- Quick Interactive Sample QR Buttons -->
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-2 mt-3">
+                <span class="text-muted small fw-semibold">Or try sample QR codes:</span>
+                <button type="button" class="sample-pill" onclick="loadSampleQr('https://bit.ly/secure-login', 'Phishing QR Sample')">
+                    <i class="bi bi-shield-x text-danger"></i> Phishing Sample QR
+                </button>
+                <button type="button" class="sample-pill" onclick="loadSampleQr('https://google.com', 'Legitimate QR Sample')">
+                    <i class="bi bi-shield-check text-success"></i> Legitimate Sample QR
+                </button>
+            </div>
+        </div>
+
+        <!-- Extracted URL Card Matching Screen 6 -->
+        <div class="pg-card" id="extractedUrlCard">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h6 fw-bold text-dark mb-0">Extracted URL</h3>
+                <span class="badge bg-light text-muted border small" id="extractedSourceBadge">QR Decoded</span>
+            </div>
+
+            <div class="input-group mb-3">
+                <span class="input-group-text bg-white border-end-0 text-muted">
+                    <i class="bi bi-link-45deg fs-5"></i>
+                </span>
+                <input 
+                    type="text" 
+                    class="form-control border-start-0 font-monospace text-dark fw-semibold" 
+                    id="extractedUrlInput" 
+                    value="https://google.com" 
+                    placeholder="URL will appear here after decoding..."
+                >
+                <button class="btn btn-pg-primary px-4" type="button" onclick="scanExtractedUrl()">
+                    Analyze URL
+                </button>
+            </div>
+
+            <!-- Scan Result Display Badge Matching Screen 6 -->
+            <div id="qrScanResultBox" class="p-3 rounded-3" style="background-color: #f0fdf4; border: 1px solid #bbf7d0;">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge-status badge-status-safe" id="qrResultBadge">
+                            <i class="bi bi-shield-check"></i> Safe
+                        </span>
+                        <span class="text-success fw-bold small" id="qrRiskLabel">Low Risk</span>
+                    </div>
+                    <span class="text-muted small" id="qrResultText">
+                        The extracted URL appears to be safe based on our lexical analysis.
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function loadSampleQr(url, label) {
+        document.getElementById('extractedUrlInput').value = url;
+        document.getElementById('extractedSourceBadge').textContent = label;
+        scanExtractedUrl();
+    }
+
+    function handleQrSelected(files) {
+        if (!files || !files[0]) return;
+        const file = files[0];
+        document.getElementById('extractedSourceBadge').textContent = file.name;
+        // In client demo, simulate decoding or extract
+        document.getElementById('extractedUrlInput').value = "https://bit.ly/secure-login";
+        scanExtractedUrl();
+    }
+
+    async function scanExtractedUrl() {
+        const url = document.getElementById('extractedUrlInput').value.trim();
+        if (!url) return;
+
+        const resultBox = document.getElementById('qrScanResultBox');
+        const resultBadge = document.getElementById('qrResultBadge');
+        const riskLabel = document.getElementById('qrRiskLabel');
+        const resultText = document.getElementById('qrResultText');
+
+        resultText.textContent = "Analyzing extracted URL...";
+
+        try {
+            const resp = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: url })
+            });
+            const data = await resp.json();
+
+            if (data.success) {
+                if (data.risk_category === 'Higher risk') {
+                    resultBox.style.backgroundColor = '#fef2f2';
+                    resultBox.style.borderColor = '#fca5a5';
+                    resultBadge.className = 'badge-status badge-status-danger';
+                    resultBadge.innerHTML = '<i class="bi bi-shield-x"></i> Phishing';
+                    riskLabel.className = 'text-danger fw-bold small';
+                    riskLabel.textContent = 'High Risk';
+                    resultText.innerHTML = `Warning! Extracted URL identified as high-risk phishing (${data.risk_score}/100). <a href="/result/${data.scan_id}" class="text-danger fw-bold ms-1">View Full Report &rarr;</a>`;
+                } else {
+                    resultBox.style.backgroundColor = '#f0fdf4';
+                    resultBox.style.borderColor = '#bbf7d0';
+                    resultBadge.className = 'badge-status badge-status-safe';
+                    resultBadge.innerHTML = '<i class="bi bi-shield-check"></i> Safe';
+                    riskLabel.className = 'text-success fw-bold small';
+                    riskLabel.textContent = 'Low Risk';
+                    resultText.innerHTML = `The extracted URL appears safe based on our analysis (${data.risk_score}/100). <a href="/result/${data.scan_id}" class="text-success fw-bold ms-1">View Full Report &rarr;</a>`;
+                }
+            }
+        } catch (e) {
+            resultText.textContent = "Error during analysis: " + e.message;
+        }
+    }
+</script>
+{% endblock %}

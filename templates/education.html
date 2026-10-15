@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}Security Education Centre — PhishingGuard AI{% endblock %}
+{% block page_title %}Security Education Centre{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Hero Banner Matching Screen 9 -->
+    <div class="col-12">
+        <div class="pg-card overflow-hidden p-0 position-relative" style="background: linear-gradient(135deg, #0b1329 0%, #1e293b 100%); border: none;">
+            <div class="row align-items-center g-4 p-4 p-md-5">
+                <div class="col-lg-8">
+                    <span class="badge bg-primary px-3 py-1 rounded-pill small mb-3">Awareness &amp; Training</span>
+                    <h2 class="display-6 fw-bold text-white mb-2">Learn. Stay Alert. Stay Safe.</h2>
+                    <p class="text-light opacity-75 small mb-4" style="max-width: 520px; line-height: 1.6;">
+                        Understand phishing threats, learn digital safety best practices, and take interactive quizzes to improve your web safety awareness.
+                    </p>
+                    <button class="btn btn-pg-primary py-2 px-4 shadow" data-bs-toggle="modal" data-bs-target="#quizModal">
+                        <i class="bi bi-mortarboard-fill"></i> Take Security Quiz
+                    </button>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <img 
+                        src="{{ url_for('static', filename='images/education_shield.jpg') }}" 
+                        alt="Security Education Badge" 
+                        class="img-fluid rounded-4 shadow-lg"
+                        style="max-height: 220px;"
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Articles Section Header -->
+    <div class="col-12 mt-2">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h3 class="h6 fw-bold text-dark mb-0">Featured Articles</h3>
+            <span class="text-muted small">Updated Security Briefings</span>
+        </div>
+
+        <div class="row g-4">
+            <!-- Article 1: What is Phishing? -->
+            <div class="col-md-4">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="badge bg-light text-primary border small">Fundamentals</span>
+                            <span class="text-muted small">5 min read</span>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-2">What is Phishing?</h4>
+                        <p class="text-muted small mb-3">
+                            Common tactics, psychological triggers, and how modern cybercriminals craft deceptive attacks to steal sensitive credentials.
+                        </p>
+                    </div>
+                    <button class="btn btn-sm btn-link text-primary fw-semibold p-0 text-start" data-bs-toggle="modal" data-bs-target="#article1Modal">
+                        Read More <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Article 2: HTTPS vs HTTP -->
+            <div class="col-md-4">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="badge bg-light text-primary border small">Encryption</span>
+                            <span class="text-muted small">4 min read</span>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-2">HTTPS vs HTTP</h4>
+                        <p class="text-muted small mb-3">
+                            Why encryption matters and why the green padlock alone no longer proves a website is safe from phishing campaigns.
+                        </p>
+                    </div>
+                    <button class="btn btn-sm btn-link text-primary fw-semibold p-0 text-start" data-bs-toggle="modal" data-bs-target="#article2Modal">
+                        Read More <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Article 3: Look-alike Domains -->
+            <div class="col-md-4">
+                <div class="pg-card h-100 d-flex flex-column justify-content-between">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="badge bg-light text-primary border small">Domain Security</span>
+                            <span class="text-muted small">6 min read</span>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark mb-2">Look-alike Domains</h4>
+                        <p class="text-muted small mb-3">
+                            How attackers use typosquatting, homoglyphs, and subdomains to deceive victims into believing they are on official portals.
+                        </p>
+                    </div>
+                    <button class="btn btn-sm btn-link text-primary fw-semibold p-0 text-start" data-bs-toggle="modal" data-bs-target="#article3Modal">
+                        Read More <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Interactive Quiz Modal Matching Screen 9 -->
+<div class="modal fade" id="quizModal" tabindex="-1" aria-labelledby="quizModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-bottom border-light">
+                <h3 class="modal-title h6 fw-bold text-dark" id="quizModalLabel">
+                    <i class="bi bi-mortarboard-fill text-primary me-1"></i> Interactive Security Quiz
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div id="quizQuestionBox">
+                    <span class="badge bg-light text-secondary border small mb-2">Question 1 of 3</span>
+                    <h4 class="h6 fw-bold text-dark mb-3">You receive an email stating your bank account has been suspended and asking you to click a link to verify credentials within 2 hours. What should you do?</h4>
+                    <div class="d-flex flex-column gap-2 mb-3">
+                        <button class="btn btn-outline-secondary text-start p-2 small" onclick="answerQuiz(false)">A) Click the link immediately to prevent suspension</button>
+                        <button class="btn btn-outline-secondary text-start p-2 small" onclick="answerQuiz(true)">B) Do not click. Navigate directly to your bank's verified website or app</button>
+                        <button class="btn btn-outline-secondary text-start p-2 small" onclick="answerQuiz(false)">C) Reply to the email asking for confirmation</button>
+                    </div>
+                </div>
+                <div id="quizResultBox" class="d-none text-center py-3">
+                    <i class="bi bi-check-circle-fill text-success fs-1 mb-2 d-block"></i>
+                    <h5 class="fw-bold text-dark mb-1">Excellent Security Awareness!</h5>
+                    <p class="text-muted small">Banks will never ask for credentials via urgent email links. Always browse directly to verified official domains.</p>
+                    <button class="btn btn-pg-primary btn-sm py-2 px-3 mt-2" data-bs-dismiss="modal">Close Quiz</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals for Articles -->
+<div class="modal fade" id="article1Modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="h6 fw-bold mb-0">What is Phishing?</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-muted small">
+                <p>Phishing is a social engineering attack where malicious actors impersonate trustworthy entities such as banks, cloud providers, or coworkers.</p>
+                <p>Common signals include artificial urgency ("within 24 hours"), generic greetings, spelling discrepancies, and suspicious URLs with numeric IP addresses or mismatched subdomains.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="article2Modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="h6 fw-bold mb-0">HTTPS vs HTTP: Why Encryption Matters</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-muted small">
+                <p>HTTPS provides encrypted communication between your browser and the server, protecting against eavesdropping.</p>
+                <p>However, modern attackers can easily obtain free SSL certificates. Therefore, a padlock icon only guarantees encryption — it does not guarantee that the entity running the website is benign!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="article3Modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="h6 fw-bold mb-0">Look-alike Domains & Typosquatting</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-muted small">
+                <p>Attackers register domains that look identical to genuine brands (e.g. replacing 'l' with '1', or adding subdomains like <code>paypal.com.verify-login.net</code>).</p>
+                <p>Always inspect the root domain before entering sensitive credentials.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function answerQuiz(isCorrect) {
+        if (isCorrect) {
+            document.getElementById('quizQuestionBox').classList.add('d-none');
+            document.getElementById('quizResultBox').classList.remove('d-none');
+        } else {
+            alert('Incorrect. Phishing emails use artificial urgency to trick you. Always access services directly.');
+        }
+    }
+</script>
+{% endblock %}

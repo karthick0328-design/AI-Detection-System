@@ -1,0 +1,10 @@
+{
+  "title": "AI-Based Phishing Website Detection Dataset",
+  "id": "karthick0328/phishing-website-detection-dataset",
+  "licenses": [
+    {
+      "name": "CC0-1.0"
+    }
+  ],
+  "description": "Curated lexical and structural URL dataset for machine learning-based phishing detection, containing balanced legitimate and phishing URLs annotated with ground truth binary labels."
+}

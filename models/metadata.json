@@ -1,0 +1,39 @@
+{
+  "model_name": "Random Forest",
+  "version": "1.0.0",
+  "created_at": "2026-10-14T08:01:15.658610+00:00",
+  "random_seed": 42,
+  "feature_count": 18,
+  "feature_names": [
+    "url_length",
+    "hostname_length",
+    "path_length",
+    "query_length",
+    "dot_count",
+    "subdomain_count",
+    "hyphen_count",
+    "at_symbol_count",
+    "digit_count_hostname",
+    "digit_ratio_url",
+    "is_ip_address",
+    "is_https",
+    "has_suspicious_keyword",
+    "suspicious_keyword_count",
+    "has_suspicious_tld",
+    "has_non_standard_port",
+    "has_punycode",
+    "special_char_count"
+  ],
+  "training_sample_count": 15998,
+  "test_sample_count": 4000,
+  "dataset_source": "dataset.csv",
+  "best_metrics": {
+    "accuracy": 0.8542,
+    "precision": 0.8711,
+    "recall": 0.8315,
+    "f1_score": 0.8509,
+    "roc_auc": 0.9342,
+    "false_positive_rate": 0.123,
+    "false_negative_rate": 0.1685
+  }
+}

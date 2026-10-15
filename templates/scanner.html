@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}URL Scanner — PhishingGuard AI{% endblock %}
+{% block page_title %}URL Scanner{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Scanner Card -->
+    <div class="col-12">
+        <div class="pg-card">
+            <h2 class="h4 fw-bold text-dark mb-1">URL Scanner</h2>
+            <p class="text-muted small mb-4">Analyze any website URL to detect phishing attempts.</p>
+
+            <form action="{{ url_for('analyze') }}" method="POST" class="scan-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <div class="scan-search-box mb-3">
+                    <i class="bi bi-search text-muted ps-2 fs-5"></i>
+                    <input 
+                        type="text" 
+                        name="url" 
+                        id="scannerInput"
+                        placeholder="Enter a website URL (e.g., https://example.com)" 
+                        required
+                        autocomplete="off"
+                    >
+                    <button type="submit" class="btn btn-pg-primary py-2 px-4">
+                        Scan URL
+                    </button>
+                </div>
+            </form>
+
+            <!-- Sample URL Pills Matching Screen 2 -->
+            <div class="d-flex flex-wrap align-items-center gap-2 pt-1">
+                <span class="text-muted small fw-semibold">Sample URLs:</span>
+                {% for sample in samples %}
+                    <a href="javascript:void(0)" class="sample-pill" onclick="setScanUrl('{{ sample.url }}')">
+                        {{ sample.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Scans Table Matching Screen 2 -->
+    <div class="col-12">
+        <div class="pg-card">
+            <div class="pg-card-header">
+                <div>
+                    <h3 class="h6 fw-bold text-dark mb-0">
+                        <i class="bi bi-clock-history me-1 text-primary"></i> Recent Scans
+                    </h3>
+                </div>
+                <div>
+                    <a href="{{ url_for('history_view') }}" class="btn btn-sm btn-link text-primary fw-semibold p-0">
+                        View All <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="pg-table">
+                    <thead>
+                        <tr>
+                            <th>URL</th>
+                            <th>Result</th>
+                            <th>Risk Level</th>
+                            <th>Date &amp; Time</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if recent_scans %}
+                            {% for record in recent_scans %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="bi bi-link-45deg text-muted fs-5"></i>
+                                            <span class="font-monospace text-dark fw-semibold text-truncate" style="max-width: 320px;" title="{{ record.submitted_url }}">
+                                                {{ record.submitted_url }}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if record.risk_category == 'Higher risk' %}
+                                            <span class="badge-status badge-status-danger">
+                                                <i class="bi bi-shield-x"></i> Phishing
+                                            </span>
+                                        {% elif record.risk_category == 'Lower detected risk' %}
+                                            <span class="badge-status badge-status-safe">
+                                                <i class="bi bi-shield-check"></i> Safe
+                                            </span>
+                                        {% else %}
+                                            <span class="badge-status badge-status-warning">
+                                                <i class="bi bi-exclamation-triangle"></i> Suspicious
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if record.risk_score >= 60 %}
+                                            <span class="text-danger fw-bold small">High</span>
+                                        {% elif record.risk_score >= 30 %}
+                                            <span class="text-warning fw-bold small">Medium</span>
+                                        {% else %}
+                                            <span class="text-success fw-bold small">Low</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-muted small">
+                                        {{ record.created_at }}
+                                    </td>
+                                    <td class="text-end">
+                                        <a href="{{ url_for('result_view', scan_id=record.id) }}" class="btn btn-sm btn-pg-secondary py-1 px-2" style="font-size: 0.8rem;">
+                                            Details
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <!-- Default fallback rows matching screenshot -->
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-link-45deg text-muted fs-5"></i>
+                                        <span class="font-monospace text-dark fw-semibold">https://www.google.com</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge-status badge-status-safe"><i class="bi bi-shield-check"></i> Safe</span></td>
+                                <td><span class="text-success fw-bold small">Low</span></td>
+                                <td class="text-muted small">Just now</td>
+                                <td class="text-end"><a href="{{ url_for('scanner_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-2" style="font-size: 0.8rem;">Details</a></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-link-45deg text-muted fs-5"></i>
+                                        <span class="font-monospace text-dark fw-semibold">https://bit.ly/secure-login</span>
+                                    </div>
+                                </td>
+                                <td><span class="badge-status badge-status-danger"><i class="bi bi-shield-x"></i> Phishing</span></td>
+                                <td><span class="text-danger fw-bold small">High</span></td>
+                                <td class="text-muted small">5 mins ago</td>
+                                <td class="text-end"><a href="{{ url_for('explain_view') }}" class="btn btn-sm btn-pg-secondary py-1 px-2" style="font-size: 0.8rem;">Details</a></td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    function setScanUrl(url) {
+        const input = document.getElementById('scannerInput');
+        if (input) {
+            input.value = url;
+            input.focus();
+        }
+    }
+</script>
+{% endblock %}

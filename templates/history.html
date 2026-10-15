@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}Scan History — PhishingGuard AI{% endblock %}
+{% block page_title %}Scan History{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Header & Action Controls -->
+    <div class="col-12">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <h2 class="h4 fw-bold text-dark mb-1">Scan History &amp; Audit Trail</h2>
+                <p class="text-muted small mb-0">Total records stored in database: <strong>{{ total_count }}</strong></p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ url_for('export_csv') }}" class="btn btn-pg-secondary btn-sm py-2 px-3">
+                    <i class="bi bi-download me-1"></i> Export to CSV
+                </a>
+                {% if total_count > 0 %}
+                    <button type="button" class="btn btn-outline-danger btn-sm py-2 px-3" data-bs-toggle="modal" data-bs-target="#clearHistoryModal">
+                        <i class="bi bi-trash3 me-1"></i> Clear History
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Search & Filter Controls -->
+    <div class="col-12">
+        <div class="pg-card p-3">
+            <form method="GET" action="{{ url_for('history_view') }}" class="row g-2 align-items-center">
+                <div class="col-md-5">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-white border-end-0 text-muted">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input 
+                            type="text" 
+                            name="q" 
+                            value="{{ search }}" 
+                            class="form-control border-start-0 text-dark" 
+                            placeholder="Search by URL or hostname..."
+                        >
+                    </div>
+                </div>
+
+                <div class="col-sm-4 col-md-3">
+                    <select name="prediction" class="form-select form-select-sm text-dark">
+                        <option value="all" {% if prediction_filter == 'all' %}selected{% endif %}>All Predictions</option>
+                        <option value="Predicted Phishing" {% if prediction_filter == 'Predicted Phishing' %}selected{% endif %}>Phishing Only</option>
+                        <option value="Predicted Legitimate" {% if prediction_filter == 'Predicted Legitimate' %}selected{% endif %}>Legitimate Only</option>
+                        <option value="Uncertain / Insufficient Evidence" {% if prediction_filter == 'Uncertain / Insufficient Evidence' %}selected{% endif %}>Uncertain Only</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-4 col-md-2">
+                    <select name="sort" class="form-select form-select-sm text-dark">
+                        <option value="date_desc" {% if sort_by == 'date_desc' %}selected{% endif %}>Newest First</option>
+                        <option value="date_asc" {% if sort_by == 'date_asc' %}selected{% endif %}>Oldest First</option>
+                        <option value="risk_desc" {% if sort_by == 'risk_desc' %}selected{% endif %}>Highest Risk</option>
+                        <option value="risk_asc" {% if sort_by == 'risk_asc' %}selected{% endif %}>Lowest Risk</option>
+                    </select>
+                </div>
+
+                <div class="col-sm-4 col-md-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-pg-primary btn-sm w-100">
+                        Filter
+                    </button>
+                    {% if search or prediction_filter != 'all' or sort_by != 'date_desc' %}
+                        <a href="{{ url_for('history_view') }}" class="btn btn-outline-secondary btn-sm" title="Reset Filters">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Records Table -->
+    <div class="col-12">
+        <div class="pg-card p-0 overflow-hidden">
+            {% if records %}
+                <div class="table-responsive">
+                    <table class="pg-table">
+                        <thead>
+                            <tr>
+                                <th>Scan #</th>
+                                <th>Analyzed URL / Target</th>
+                                <th>Prediction</th>
+                                <th>Risk Score</th>
+                                <th>Signals</th>
+                                <th>Timestamp (UTC)</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in records %}
+                                <tr>
+                                    <td class="text-muted small">#{{ r.id }}</td>
+                                    <td>
+                                        <div class="font-monospace fw-semibold text-dark text-truncate" style="max-width: 320px;" title="{{ r.submitted_url }}">
+                                            {{ r.submitted_url }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if r.risk_category == 'Higher risk' %}
+                                            <span class="badge-status badge-status-danger">
+                                                <i class="bi bi-shield-x"></i> Phishing
+                                            </span>
+                                        {% elif r.risk_category == 'Lower detected risk' %}
+                                            <span class="badge-status badge-status-safe">
+                                                <i class="bi bi-shield-check"></i> Safe
+                                            </span>
+                                        {% else %}
+                                            <span class="badge-status badge-status-warning">
+                                                <i class="bi bi-exclamation-triangle"></i> Uncertain
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <strong class="{% if r.risk_score >= 60 %}text-danger{% elif r.risk_score >= 30 %}text-warning{% else %}text-success{% endif %}">
+                                            {{ "%.1f"|format(r.risk_score) }}
+                                        </strong><span class="text-muted small">/100</span>
+                                    </td>
+                                    <td>
+                                        {% if r.warning_count > 0 %}
+                                            <span class="text-danger fw-semibold small">{{ r.warning_count }} flags</span>
+                                        {% else %}
+                                            <span class="text-success small">0 flags</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-muted small">{{ r.created_at }}</td>
+                                    <td class="text-end">
+                                        <div class="d-inline-flex gap-1">
+                                            <a href="{{ url_for('result_view', scan_id=r.id) }}" class="btn btn-sm btn-pg-secondary py-1 px-2" title="View Report" style="font-size: 0.8rem;">
+                                                Report
+                                            </a>
+                                            <a href="{{ url_for('explain_view', scan_id=r.id) }}" class="btn btn-sm btn-outline-primary py-1 px-2" title="Explainable AI" style="font-size: 0.8rem;">
+                                                Explain
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                {% if total_pages > 1 %}
+                    <div class="p-3 border-top border-light d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Page {{ page }} of {{ total_pages }}</span>
+                        <div class="d-flex gap-1">
+                            {% if page > 1 %}
+                                <a href="{{ url_for('history_view', page=page-1, q=search, prediction=prediction_filter, sort=sort_by) }}" class="btn btn-sm btn-outline-secondary">Previous</a>
+                            {% endif %}
+                            {% if page < total_pages %}
+                                <a href="{{ url_for('history_view', page=page+1, q=search, prediction=prediction_filter, sort=sort_by) }}" class="btn btn-sm btn-outline-secondary">Next</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="bi bi-clock-history display-4 text-muted d-block mb-3"></i>
+                    <h3 class="h5 text-dark fw-bold mb-1">No Scan Records Found</h3>
+                    <p class="text-muted small mb-4">No scan history matches your active filter query.</p>
+                    <a href="{{ url_for('scanner_view') }}" class="btn btn-pg-primary btn-sm py-2 px-3">
+                        <i class="bi bi-plus-lg"></i> Run New Scan
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Clear History Confirmation Modal -->
+<div class="modal fade" id="clearHistoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header">
+                <h3 class="modal-title h6 fw-bold text-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Clear Scan History
+                </h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-muted small">
+                Are you sure you want to delete all stored scan history? This action is permanent and cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="{{ url_for('api_clear_history') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button type="submit" class="btn btn-sm btn-danger">Yes, Clear All History</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

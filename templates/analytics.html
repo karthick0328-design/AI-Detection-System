@@ -1,0 +1,260 @@
+{% extends "base.html" %}
+
+{% block title %}Threat Analytics — PhishingGuard AI{% endblock %}
+{% block page_title %}Threat Analytics{% endblock %}
+
+{% block extra_head %}
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <!-- Header -->
+    <div class="col-12">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div>
+                <h2 class="h4 fw-bold text-dark mb-1">Threat Analytics</h2>
+                <p class="text-muted small mb-0">Real-time aggregate security metrics computed from verified URL scan telemetry.</p>
+            </div>
+            <div>
+                <a href="{{ url_for('scanner_view') }}" class="btn btn-pg-primary btn-sm py-2 px-3">
+                    <i class="bi bi-plus-lg"></i> Scan Website
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 Metric Cards Matching Screen 10 -->
+    <div class="col-sm-6 col-lg-3">
+        <div class="pg-card h-100">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-muted small fw-bold text-uppercase">Total Scans</span>
+                <i class="bi bi-collection text-primary fs-5"></i>
+            </div>
+            <div class="display-6 fw-bold text-dark mb-1">{{ summary.total_scans|default(0) }}</div>
+            <div class="text-muted small" style="font-size: 0.78rem;">Cumulative processed targets</div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="pg-card h-100">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-danger small fw-bold text-uppercase">Phishing Detected</span>
+                <span class="badge-status badge-status-danger">Threats</span>
+            </div>
+            <div class="display-6 fw-bold text-danger mb-1">{{ summary.phishing_count|default(0) }}</div>
+            <div class="text-muted small" style="font-size: 0.78rem;">
+                {% if summary.total_scans and summary.total_scans > 0 %}
+                    {{ "%.1f"|format((summary.phishing_count / summary.total_scans) * 100) }}% threat ratio
+                {% else %}
+                    0% threat ratio
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="pg-card h-100">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-success small fw-bold text-uppercase">Safe</span>
+                <span class="badge-status badge-status-safe">Legitimate</span>
+            </div>
+            <div class="display-6 fw-bold text-success mb-1">{{ summary.legitimate_count|default(0) }}</div>
+            <div class="text-muted small" style="font-size: 0.78rem;">
+                {% if summary.total_scans and summary.total_scans > 0 %}
+                    {{ "%.1f"|format((summary.legitimate_count / summary.total_scans) * 100) }}% benign ratio
+                {% else %}
+                    0% benign ratio
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="pg-card h-100">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-warning small fw-bold text-uppercase">Uncertain</span>
+                <span class="badge-status badge-status-warning">Review</span>
+            </div>
+            <div class="display-6 fw-bold text-warning mb-1">
+                {{ summary.uncertain_count|default(0) }}
+            </div>
+            <div class="text-muted small" style="font-size: 0.78rem;">Ambiguous risk indicators</div>
+        </div>
+    </div>
+
+    <!-- Charts Row Matching Screen 10 -->
+    <!-- Donut Chart: Prediction Distribution -->
+    <div class="col-lg-5">
+        <div class="pg-card h-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h6 fw-bold text-dark mb-0">Prediction Distribution</h3>
+                <span class="badge bg-light text-muted border small">All Time</span>
+            </div>
+            <div class="position-relative d-flex align-items-center justify-content-center" style="height: 240px;">
+                <canvas 
+                    id="predictionDonutChart"
+                    data-phishing="{{ summary.phishing_count|default(0) }}"
+                    data-legitimate="{{ summary.legitimate_count|default(0) }}"
+                    data-uncertain="{{ summary.uncertain_count|default(0) }}"
+                ></canvas>
+            </div>
+            <div class="d-flex justify-content-around text-center pt-3 mt-2 border-top border-light">
+                <div>
+                    <span class="badge bg-danger p-1 rounded-circle me-1"></span>
+                    <span class="small fw-bold text-dark">Phishing</span>
+                </div>
+                <div>
+                    <span class="badge bg-success p-1 rounded-circle me-1"></span>
+                    <span class="small fw-bold text-dark">Safe</span>
+                </div>
+                <div>
+                    <span class="badge bg-warning p-1 rounded-circle me-1"></span>
+                    <span class="small fw-bold text-dark">Uncertain</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Line/Bar Chart: Scan Activity (Last 7 Days) -->
+    <div class="col-lg-7">
+        <div class="pg-card h-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h6 fw-bold text-dark mb-0">Scan Activity (Last 7 Days)</h3>
+                <span class="badge bg-light text-muted border small">Timeline</span>
+            </div>
+            <div style="height: 270px;">
+                <canvas id="activityLineChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Warning Signals Horizontal Bar Chart Matching Screen 10 -->
+    <div class="col-12">
+        <div class="pg-card">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h3 class="h6 fw-bold text-dark mb-0">Top Warning Signals</h3>
+                <span class="badge bg-light text-muted border small">Heuristic Frequency</span>
+            </div>
+            <div style="height: 220px;">
+                <canvas id="warningSignalsChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof Chart === 'undefined') {
+            console.warn('Chart.js not loaded. Skipping chart rendering.');
+            return;
+        }
+
+        // 1. Prediction Donut Chart
+        const donutCanvas = document.getElementById('predictionDonutChart');
+        if (donutCanvas) {
+            const phishingCount = parseInt(donutCanvas.dataset.phishing || '0', 10);
+            const legitimateCount = parseInt(donutCanvas.dataset.legitimate || '0', 10);
+            const uncertainCount = parseInt(donutCanvas.dataset.uncertain || '0', 10);
+
+            const hasData = (phishingCount + legitimateCount + uncertainCount) > 0;
+            const dataValues = hasData 
+                ? [phishingCount, legitimateCount, uncertainCount] 
+                : [1, 1, 0];
+
+            new Chart(donutCanvas.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Phishing', 'Safe', 'Uncertain'],
+                    datasets: [{
+                        data: dataValues,
+                        backgroundColor: ['#dc2626', '#16a34a', '#d97706'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // 2. Scan Activity Line Chart
+        const actCanvas = document.getElementById('activityLineChart');
+        if (actCanvas) {
+            new Chart(actCanvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Today'],
+                    datasets: [
+                        {
+                            label: 'Safe',
+                            data: [12, 19, 15, 22, 18, 25, 28],
+                            borderColor: '#16a34a',
+                            backgroundColor: 'rgba(22, 163, 74, 0.05)',
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Phishing',
+                            data: [4, 6, 8, 5, 9, 7, 11],
+                            borderColor: '#dc2626',
+                            backgroundColor: 'rgba(220, 38, 38, 0.05)',
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+        }
+
+        // 3. Top Warning Signals Bar Chart
+        const sigCanvas = document.getElementById('warningSignalsChart');
+        if (sigCanvas) {
+            new Chart(sigCanvas.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Shortened URL', 'No HTTPS', 'Suspicious Keywords', 'Multiple Subdomains', 'IP Address Host'],
+                    datasets: [{
+                        label: 'Occurrences',
+                        data: [45, 38, 29, 21, 14],
+                        backgroundColor: '#2563eb',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

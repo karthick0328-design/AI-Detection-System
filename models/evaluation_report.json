@@ -1,0 +1,72 @@
+{
+  "model_name": "Random Forest",
+  "test_sample_count": 4000,
+  "metrics": {
+    "accuracy": 0.8542,
+    "precision": 0.8711,
+    "recall": 0.8315,
+    "f1_score": 0.8509,
+    "roc_auc": 0.9342,
+    "false_positive_rate": 0.123,
+    "false_negative_rate": 0.1685
+  },
+  "confusion_matrix": {
+    "true_negatives": 1754,
+    "false_positives": 246,
+    "false_negatives": 337,
+    "true_positives": 1663,
+    "matrix": [
+      [
+        1754,
+        246
+      ],
+      [
+        337,
+        1663
+      ]
+    ]
+  },
+  "discussion": {
+    "false_positives_impact": "Blocks legitimate users from accessing genuine websites, harming user trust.",
+    "false_negatives_impact": "Fails to detect malicious sites, leaving users vulnerable to credential theft and malware.",
+    "operational_tradeoff": "A balanced F1-score is prioritized, with conservative risk categorizations for borderline predictions."
+  },
+  "all_candidates": {
+    "Random Forest": {
+      "accuracy": 0.8542,
+      "precision": 0.8711,
+      "recall": 0.8315,
+      "f1_score": 0.8509,
+      "roc_auc": 0.9342,
+      "false_positive_rate": 0.123,
+      "false_negative_rate": 0.1685
+    },
+    "Decision Tree": {
+      "accuracy": 0.839,
+      "precision": 0.8779,
+      "recall": 0.7875,
+      "f1_score": 0.8303,
+      "roc_auc": 0.8953,
+      "false_positive_rate": 0.1095,
+      "false_negative_rate": 0.2125
+    },
+    "Logistic Regression": {
+      "accuracy": 0.7325,
+      "precision": 0.7899,
+      "recall": 0.6335,
+      "f1_score": 0.7031,
+      "roc_auc": 0.8407,
+      "false_positive_rate": 0.1685,
+      "false_negative_rate": 0.3665
+    },
+    "Gradient Boosting": {
+      "accuracy": 0.8492,
+      "precision": 0.8562,
+      "recall": 0.8395,
+      "f1_score": 0.8478,
+      "roc_auc": 0.9313,
+      "false_positive_rate": 0.141,
+      "false_negative_rate": 0.1605
+    }
+  }
+}
