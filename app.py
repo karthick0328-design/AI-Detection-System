@@ -41,9 +41,19 @@ def generate_csrf_token() -> str:
     return session["_csrf_token"]
 
 @app.context_processor
-def inject_csrf_token():
-    """Makes csrf_token available in all Jinja templates."""
-    return dict(csrf_token=generate_csrf_token())
+def inject_globals():
+    """Makes csrf_token and active user profile available across all Jinja templates."""
+    if "user_profile" not in session:
+        session["user_profile"] = {
+            "name": "Karthick",
+            "email": "karthick@phishingguard.ai",
+            "role": "Security Analyst",
+            "organization": "PhishingGuard AI Lab"
+        }
+    return dict(
+        csrf_token=generate_csrf_token(),
+        current_user=session["user_profile"]
+    )
 
 def validate_csrf():
     """Validates submitted CSRF token against active session."""
@@ -61,11 +71,11 @@ def set_security_headers(response):
     response.headers["X-XSS-Protection"] = "1; mode=block"
     response.headers["Content-Security-Policy"] = (
         "default-src 'self'; "
-        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com; "
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; "
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com; "
         "font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net data:; "
         "img-src 'self' data: https:; "
-        "connect-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com data:;"
+        "connect-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://fonts.googleapis.com https://fonts.gstatic.com data:;"
     )
     return response
 
@@ -173,10 +183,120 @@ def api_email_analyze():
     return jsonify({"success": True, "result": analysis})
 
 
-@app.route("/account")
+@app.route("/account", methods=["GET", "POST"])
 def account_view():
     """User Account and PDF Reporting interface (Screen 8)."""
-    return render_template("account.html")
+    if "user_profile" not in session:
+        session["user_profile"] = {
+            "name": "Karthick",
+            "email": "karthick@phishingguard.ai",
+            "role": "Security Analyst",
+            "organization": "PhishingGuard AI Lab"
+        }
+
+    if request.method == "POST":
+        validate_csrf()
+        name = request.form.get("name", "").strip() or session["user_profile"].get("name", "Karthick")
+        email = request.form.get("email", "").strip()
+        role = request.form.get("role", "").strip() or session["user_profile"].get("role", "Security Analyst")
+        org = request.form.get("organization", "").strip() or session["user_profile"].get("organization", "PhishingGuard AI Lab")
+
+        if not email or "@" not in email:
+            flash("Please enter a valid email address.", "danger")
+            return redirect(url_for("account_view"))
+
+        session["user_profile"] = {
+            "name": name,
+            "email": email,
+            "role": role,
+            "organization": org
+        }
+        session.modified = True
+        flash(f"Account settings saved successfully! Email updated to {email}.", "success")
+        return redirect(url_for("account_view"))
+
+    records, _ = list_scans(limit=10)
+    summary = get_analytics_summary()
+    return render_template("account.html", user=session["user_profile"], recent_scans=records, summary=summary)
+
+
+@app.route("/api/account/update", methods=["POST"])
+def api_account_update():
+    """REST API endpoint to update account preferences asynchronously."""
+    data = request.get_json(silent=True) or {}
+    email = data.get("email", "").strip()
+    name = data.get("name", "").strip() or "Karthick"
+    role = data.get("role", "").strip() or "Security Analyst"
+    org = data.get("organization", "").strip() or "PhishingGuard AI Lab"
+
+    if not email or "@" not in email:
+        return jsonify({"success": False, "error": "Please provide a valid email address."}), 400
+
+    session["user_profile"] = {
+        "name": name,
+        "email": email,
+        "role": role,
+        "organization": org
+    }
+    session.modified = True
+    return jsonify({
+        "success": True,
+        "message": f"Account profile saved successfully! Active email: {email}",
+        "user": session["user_profile"]
+    })
+
+
+@app.route("/register", methods=["GET", "POST"])
+def register_view():
+    """Enterprise and Academic Account Registration interface."""
+    if request.method == "POST":
+        validate_csrf()
+        name = request.form.get("name", "").strip()
+        email = request.form.get("email", "").strip()
+        role = request.form.get("role", "").strip() or "Security Analyst"
+        org = request.form.get("organization", "").strip() or "Academic Institution"
+
+        if not name or not email or "@" not in email:
+            flash("Please provide your name and a valid email address.", "danger")
+            return render_template("register.html")
+
+        session["user_profile"] = {
+            "name": name,
+            "email": email,
+            "role": role,
+            "organization": org
+        }
+        session.modified = True
+        flash(f"Welcome to PhishingGuard AI, {name}! Your account has been registered successfully.", "success")
+        return redirect(url_for("account_view"))
+
+    return render_template("register.html")
+
+
+@app.route("/account/report/pdf")
+def account_report_pdf():
+    """Renders a certified, printable Executive Security Audit PDF report."""
+    summary = get_analytics_summary()
+    records, total_count = list_scans(limit=25)
+    model, _, _ = get_model_artifacts()
+    user = session.get("user_profile", {
+        "name": "Karthick",
+        "email": "karthick@phishingguard.ai",
+        "role": "Security Analyst",
+        "organization": "PhishingGuard AI Lab"
+    })
+    generated_at = datetime.now(timezone.utc).strftime("%B %d, %Y - %H:%M UTC")
+    report_id = f"PGAI-AUDIT-{secrets.token_hex(4).upper()}"
+
+    return render_template(
+        "report_pdf.html",
+        summary=summary,
+        records=records,
+        total_count=total_count,
+        user=user,
+        generated_at=generated_at,
+        report_id=report_id
+    )
 
 
 @app.route("/education")

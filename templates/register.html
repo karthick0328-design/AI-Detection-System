@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Enterprise Registration — PhishingGuard AI{% endblock %}
+{% block page_title %}Security Account Registration{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-3">
+    <div class="col-lg-7 col-md-9">
+        <div class="pg-card">
+            <div class="text-center mb-4">
+                <div class="rounded-circle bg-primary-subtle text-primary mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 56px; height: 56px;">
+                    <i class="bi bi-shield-lock-fill fs-3"></i>
+                </div>
+                <h2 class="h4 fw-bold text-dark mb-1">Create Security Analyst Account</h2>
+                <p class="text-muted small">Register for enterprise scan telemetry, certified PDF exports, and threat analytics.</p>
+            </div>
+
+            <form action="{{ url_for('register_view') }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label class="form-label small fw-bold text-muted" for="regName">Full Name *</label>
+                        <input type="text" class="form-control" id="regName" name="name" placeholder="e.g. A Karthick" required>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label small fw-bold text-muted" for="regRole">Professional Role</label>
+                        <select class="form-select" id="regRole" name="role">
+                            <option value="Security Analyst" selected>Security Analyst</option>
+                            <option value="Threat Intelligence Lead">Threat Intelligence Lead</option>
+                            <option value="SOC Engineer">SOC Engineer</option>
+                            <option value="Academic Researcher">Academic Researcher</option>
+                            <option value="Cybersecurity Student">Cybersecurity Student</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted" for="regEmail">Academic / Enterprise Email *</label>
+                    <input type="email" class="form-control" id="regEmail" name="email" placeholder="name@organization.com" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label small fw-bold text-muted" for="regOrg">Organization / University</label>
+                    <input type="text" class="form-control" id="regOrg" name="organization" placeholder="e.g. PhishingGuard AI Lab or University" value="PhishingGuard AI Lab">
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label class="form-label small fw-bold text-muted" for="regPassword">Security Password *</label>
+                        <input type="password" class="form-control" id="regPassword" name="password" placeholder="••••••••••••" required>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label small fw-bold text-muted" for="regConfirm">Confirm Password *</label>
+                        <input type="password" class="form-control" id="regConfirm" name="confirm_password" placeholder="••••••••••••" required>
+                    </div>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="termsCheck" required checked>
+                    <label class="form-check-label small text-muted" for="termsCheck">
+                        I agree to ethical cybersecurity scanning policies and telemetry tracking guidelines.
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-pg-primary w-100 py-2 fw-bold">
+                    <i class="bi bi-person-check-fill me-1"></i> Register Account
+                </button>
+            </form>
+
+            <div class="text-center mt-4 pt-3 border-top border-light text-muted small">
+                Already registered? <a href="{{ url_for('account_view') }}" class="text-primary fw-semibold">Sign in to User Account</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

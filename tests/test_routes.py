@@ -164,4 +164,30 @@ def test_new_suite_routes(client):
     assert r.status_code == 200
     assert b"Site Navigation Overview" in r.data
 
+    # Test Account Settings Update API
+    r_update = client.post("/api/account/update", json={
+        "name": "Karthick A",
+        "email": "karthick.updated@security.org",
+        "role": "Lead Security Analyst"
+    })
+    assert r_update.status_code == 200
+    update_data = r_update.get_json()
+    assert update_data["success"] is True
+    assert update_data["user"]["email"] == "karthick.updated@security.org"
+
+    # Test PDF Report Audit View
+    r_pdf = client.get("/account/report/pdf")
+    assert r_pdf.status_code == 200
+    assert b"PhishingGuard" in r_pdf.data
+    assert b"Executive Cybersecurity Telemetry" in r_pdf.data
+
+    # Test Enterprise Registration Page
+    r_reg = client.get("/register")
+    assert r_reg.status_code == 200
+    assert b"Create Security Analyst Account" in r_reg.data
+
+    # Test Header Notifications Dropdown
+    assert b"Security Notifications" in r.data
+    assert b"notificationsDropdown" in r.data
+
 
