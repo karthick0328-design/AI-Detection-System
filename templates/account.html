@@ -217,73 +217,83 @@
      Hidden PDF Report Layout for html2pdf Direct File Download
      ========================================================================== -->
 <div style="display: none;">
-    <div id="hiddenPdfReportTemplate" style="padding: 30px; font-family: Arial, sans-serif; color: #1e293b; background: #ffffff;">
-        <div style="border-bottom: 2px solid #0f172a; padding-bottom: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-                <h2 style="font-size: 22px; margin: 0; font-weight: bold; color: #0f172a;">🛡️ PhishingGuard AI</h2>
-                <p style="font-size: 11px; color: #64748b; margin: 4px 0 0 0;">Executive Cybersecurity Audit &amp; Threat Telemetry Report</p>
-            </div>
-            <div style="text-align: right;">
-                <span style="background: #0f172a; color: #ffffff; padding: 4px 10px; font-size: 11px; border-radius: 4px; font-weight: bold;">OFFICIAL AUDIT</span>
-                <p style="font-size: 10px; color: #64748b; margin: 4px 0 0 0;">Report Date: {{ None|default('Current Session') }}</p>
-            </div>
-        </div>
-
-        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-bottom: 20px; display: flex; justify-content: space-between;">
-            <div>
-                <div style="font-size: 10px; text-transform: uppercase; color: #64748b; font-weight: bold;">Audited Security Officer</div>
-                <div style="font-size: 13px; font-weight: bold; color: #0f172a;" id="pdfUserDisplay">{{ current_user.name }} ({{ current_user.email }})</div>
-                <div style="font-size: 11px; color: #475569;">{{ current_user.role }} &bull; {{ current_user.organization }}</div>
-            </div>
-            <div style="text-align: right;">
-                <div style="font-size: 10px; text-transform: uppercase; color: #64748b; font-weight: bold;">Inference Model</div>
-                <div style="font-size: 12px; font-weight: bold; color: #16a34a;">Random Forest (18 Features)</div>
-                <div style="font-size: 10px; color: #64748b;">Validation Recall: 99.1% | F1: 0.99</div>
-            </div>
-        </div>
-
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+    <div id="hiddenPdfReportTemplate" style="box-sizing: border-box; width: 680px; max-width: 680px; margin: 0; padding: 24px 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1e293b; background: #ffffff;">
+        <!-- Header Table -->
+        <table style="width: 100%; border-collapse: collapse; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 18px;">
             <tr>
-                <td style="width: 25%; padding: 10px; background: #f8fafc; border: 1px solid #e2e8f0; text-align: center;">
-                    <div style="font-size: 20px; font-weight: bold; color: #0f172a;">{{ summary.total_scans|default(0) }}</div>
-                    <div style="font-size: 9px; text-transform: uppercase; color: #64748b; font-weight: bold;">Total URLs Scanned</div>
+                <td style="vertical-align: middle; text-align: left;">
+                    <div style="font-size: 20px; font-weight: 800; color: #0f172a; line-height: 1.2;">🛡️ PhishingGuard AI</div>
+                    <div style="font-size: 11px; color: #64748b; margin-top: 3px;">Executive Cybersecurity Audit &amp; Threat Telemetry Report</div>
                 </td>
-                <td style="width: 25%; padding: 10px; background: #fef2f2; border: 1px solid #fecaca; text-align: center;">
-                    <div style="font-size: 20px; font-weight: bold; color: #dc2626;">{{ summary.phishing_count|default(0) }}</div>
-                    <div style="font-size: 9px; text-transform: uppercase; color: #dc2626; font-weight: bold;">Malicious Interceptions</div>
-                </td>
-                <td style="width: 25%; padding: 10px; background: #f0fdf4; border: 1px solid #bbf7d0; text-align: center;">
-                    <div style="font-size: 20px; font-weight: bold; color: #16a34a;">{{ summary.legitimate_count|default(0) }}</div>
-                    <div style="font-size: 9px; text-transform: uppercase; color: #16a34a; font-weight: bold;">Safe Destinations</div>
-                </td>
-                <td style="width: 25%; padding: 10px; background: #eff6ff; border: 1px solid #bfdbfe; text-align: center;">
-                    <div style="font-size: 20px; font-weight: bold; color: #2563eb;">{{ summary.overall_risk_score|default(12)|round(1) }}%</div>
-                    <div style="font-size: 9px; text-transform: uppercase; color: #2563eb; font-weight: bold;">Average Threat Score</div>
+                <td style="vertical-align: middle; text-align: right; white-space: nowrap;">
+                    <span style="background: #0f172a; color: #ffffff; padding: 4px 10px; font-size: 10px; border-radius: 4px; font-weight: 800; letter-spacing: 0.5px;">OFFICIAL AUDIT</span>
+                    <div style="font-size: 10px; color: #64748b; margin-top: 4px;" id="pdfDateDisplay">Report Date: Current Session</div>
                 </td>
             </tr>
         </table>
 
-        <div style="margin-bottom: 10px; font-size: 12px; font-weight: bold; color: #0f172a;">RECENT SECURITY AUDIT ENTRIES:</div>
-        <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+        <!-- Officer & Engine Info Table -->
+        <table style="width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 10px 0; margin-bottom: 18px;">
+            <tr>
+                <td style="width: 50%; vertical-align: top; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 12px; box-sizing: border-box;">
+                    <div style="font-size: 9px; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.5px;">AUDITED SECURITY OFFICER</div>
+                    <div style="font-size: 12px; font-weight: 700; color: #0f172a; margin-top: 2px; word-break: break-all;" id="pdfUserDisplay">{{ current_user.name }} ({{ current_user.email }})</div>
+                    <div style="font-size: 10px; color: #475569; margin-top: 2px;" id="pdfUserRoleOrg">{{ current_user.role }} &bull; {{ current_user.organization }}</div>
+                </td>
+                <td style="width: 50%; vertical-align: top; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 12px; text-align: right; box-sizing: border-box;">
+                    <div style="font-size: 9px; text-transform: uppercase; color: #64748b; font-weight: 700; letter-spacing: 0.5px;">INFERENCE ENGINE</div>
+                    <div style="font-size: 12px; font-weight: 700; color: #16a34a; margin-top: 2px;">Random Forest (18 Features)</div>
+                    <div style="font-size: 10px; color: #64748b; margin-top: 2px;">Validation Recall: 99.1% | F1: 0.99</div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Metric Summary Cards Table -->
+        <table style="width: 100%; table-layout: fixed; border-collapse: separate; border-spacing: 6px 0; margin-bottom: 18px;">
+            <tr>
+                <td style="width: 25%; padding: 10px 4px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; text-align: center; box-sizing: border-box;">
+                    <div style="font-size: 18px; font-weight: 800; color: #0f172a; line-height: 1.2;">{{ summary.total_scans|default(0) }}</div>
+                    <div style="font-size: 8px; text-transform: uppercase; color: #64748b; font-weight: 700; margin-top: 3px; white-space: nowrap;">TOTAL SCANS</div>
+                </td>
+                <td style="width: 25%; padding: 10px 4px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; text-align: center; box-sizing: border-box;">
+                    <div style="font-size: 18px; font-weight: 800; color: #dc2626; line-height: 1.2;">{{ summary.phishing_count|default(0) }}</div>
+                    <div style="font-size: 8px; text-transform: uppercase; color: #dc2626; font-weight: 700; margin-top: 3px; white-space: nowrap;">MALICIOUS BLOCKS</div>
+                </td>
+                <td style="width: 25%; padding: 10px 4px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; text-align: center; box-sizing: border-box;">
+                    <div style="font-size: 18px; font-weight: 800; color: #16a34a; line-height: 1.2;">{{ summary.legitimate_count|default(0) }}</div>
+                    <div style="font-size: 8px; text-transform: uppercase; color: #16a34a; font-weight: 700; margin-top: 3px; white-space: nowrap;">SAFE SITES</div>
+                </td>
+                <td style="width: 25%; padding: 10px 4px; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; text-align: center; box-sizing: border-box;">
+                    <div style="font-size: 18px; font-weight: 800; color: #2563eb; line-height: 1.2;">{{ summary.overall_risk_score|default(12)|round(1) }}%</div>
+                    <div style="font-size: 8px; text-transform: uppercase; color: #2563eb; font-weight: 700; margin-top: 3px; white-space: nowrap;">MEAN THREAT</div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- Audit Table -->
+        <div style="margin-bottom: 8px; font-size: 11px; font-weight: 700; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">RECENT SECURITY AUDIT ENTRIES:</div>
+        <table style="width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 9.5px; margin-bottom: 16px;">
             <thead>
                 <tr style="background: #0f172a; color: #ffffff;">
-                    <th style="padding: 6px; text-align: left;">Target URL</th>
-                    <th style="padding: 6px; text-align: center;">Verdict</th>
-                    <th style="padding: 6px; text-align: center;">Threat Score</th>
-                    <th style="padding: 6px; text-align: right;">Timestamp</th>
+                    <th style="width: 52%; padding: 6px 8px; text-align: left; box-sizing: border-box;">Target URL</th>
+                    <th style="width: 16%; padding: 6px; text-align: center; box-sizing: border-box;">Verdict</th>
+                    <th style="width: 16%; padding: 6px; text-align: center; box-sizing: border-box;">Threat Score</th>
+                    <th style="width: 16%; padding: 6px 8px; text-align: right; box-sizing: border-box; white-space: nowrap;">Timestamp</th>
                 </tr>
             </thead>
             <tbody>
                 {% for r in recent_scans|default([]) %}
                 <tr style="border-bottom: 1px solid #e2e8f0;">
-                    <td style="padding: 6px; font-family: monospace;">{{ r.submitted_url|truncate(45) }}</td>
-                    <td style="padding: 6px; text-align: center;">
-                        <span style="font-weight: bold; color: {% if r.prediction == 'Phishing' %}#dc2626{% else %}#16a34a{% endif %};">
+                    <td style="padding: 6px 8px; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; box-sizing: border-box;" title="{{ r.submitted_url }}">
+                        {{ r.submitted_url }}
+                    </td>
+                    <td style="padding: 6px; text-align: center; box-sizing: border-box;">
+                        <span style="font-weight: 700; color: {% if r.prediction == 'Phishing' %}#dc2626{% else %}#16a34a{% endif %};">
                             {{ r.prediction }}
                         </span>
                     </td>
-                    <td style="padding: 6px; text-align: center; font-weight: bold;">{{ r.risk_score|round(1) }}%</td>
-                    <td style="padding: 6px; text-align: right; color: #64748b;">{{ r.created_at }}</td>
+                    <td style="padding: 6px; text-align: center; font-weight: 700; box-sizing: border-box;">{{ r.risk_score|round(1) }}%</td>
+                    <td style="padding: 6px 8px; text-align: right; color: #64748b; white-space: nowrap; box-sizing: border-box;">{{ r.created_at }}</td>
                 </tr>
                 {% else %}
                 <tr>
@@ -293,10 +303,17 @@
             </tbody>
         </table>
 
-        <div style="margin-top: 30px; border-top: 1px solid #cbd5e1; padding-top: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 9px; color: #64748b;">
-            <div>Certified Cryptographic Telemetry by PhishingGuard AI Ensemble Engine.</div>
-            <div style="font-weight: bold; color: #0f172a;">Security Rating: A+ Compliant</div>
-        </div>
+        <!-- Footer Table -->
+        <table style="width: 100%; border-collapse: collapse; border-top: 1px solid #cbd5e1; margin-top: 16px; padding-top: 10px;">
+            <tr>
+                <td style="font-size: 8.5px; color: #64748b; vertical-align: middle; text-align: left;">
+                    Certified Cryptographic Telemetry by PhishingGuard AI Ensemble Engine.
+                </td>
+                <td style="font-size: 9px; font-weight: 700; color: #0f172a; text-align: right; vertical-align: middle; white-space: nowrap;">
+                    Security Rating: A+ Compliant
+                </td>
+            </tr>
+        </table>
     </div>
 </div>
 
@@ -379,32 +396,58 @@
         btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Generating PDF...';
         btn.disabled = true;
 
-        // Sync active user details into hidden template before generating
+        // Sync active user details and live date into hidden template before generating
         const currentName = document.getElementById('accountName') ? document.getElementById('accountName').value : 'Karthick';
         const currentEmail = document.getElementById('accountEmail') ? document.getElementById('accountEmail').value : 'karthick@phishingguard.ai';
+        const currentRole = document.getElementById('accountRole') ? document.getElementById('accountRole').value : 'Security Analyst';
+        
         const pdfUserDisplay = document.getElementById('pdfUserDisplay');
         if (pdfUserDisplay) {
             pdfUserDisplay.textContent = currentName + ' (' + currentEmail + ')';
         }
+        const pdfUserRoleOrg = document.getElementById('pdfUserRoleOrg');
+        if (pdfUserRoleOrg) {
+            pdfUserRoleOrg.textContent = currentRole + ' \u2022 PhishingGuard AI Lab';
+        }
+        const pdfDateDisplay = document.getElementById('pdfDateDisplay');
+        if (pdfDateDisplay) {
+            const now = new Date();
+            pdfDateDisplay.textContent = 'Report Date: ' + now.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
 
         const element = document.getElementById('hiddenPdfReportTemplate');
         
-        // Clone element to make visible during canvas capture
+        // Clone element offscreen with exact pixel width matching A4 printable body
         const clone = element.cloneNode(true);
         clone.style.display = 'block';
-        clone.style.width = '794px'; // A4 standard width in px
+        clone.style.position = 'absolute';
+        clone.style.left = '-9999px';
+        clone.style.top = '0';
+        clone.style.width = '680px';
+        clone.style.maxWidth = '680px';
+        clone.style.boxSizing = 'border-box';
         document.body.appendChild(clone);
 
         const opt = {
             margin:       [10, 10, 10, 10],
             filename:     'PhishingGuard_Security_Audit_Report.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true, logging: false },
+            html2canvas:  { 
+                scale: 2, 
+                useCORS: true, 
+                logging: false,
+                width: 680,
+                windowWidth: 680,
+                scrollX: 0,
+                scrollY: 0
+            },
             jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
 
         html2pdf().set(opt).from(clone).save().then(() => {
-            document.body.removeChild(clone);
+            if (document.body.contains(clone)) {
+                document.body.removeChild(clone);
+            }
             btn.innerHTML = '<i class="bi bi-check2 me-1"></i> Download Complete!';
             setTimeout(() => {
                 btn.innerHTML = originalText;
@@ -412,7 +455,9 @@
             }, 3000);
         }).catch(err => {
             console.error("PDF generation error:", err);
-            document.body.removeChild(clone);
+            if (document.body.contains(clone)) {
+                document.body.removeChild(clone);
+            }
             btn.innerHTML = originalText;
             btn.disabled = false;
             // Fallback: open print view
